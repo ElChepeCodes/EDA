@@ -1,0 +1,157 @@
+package Trees;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+
+public class BinarySearchTree<T extends Comparable<T>> implements BinarySearchTreeADT<T> {
+
+    private NodoBT<T> raiz;
+    private int cont;
+
+    public BinarySearchTree(){
+        raiz = null;
+        cont = 0;
+    }//builder
+
+    @Override
+    public boolean isEmpty() {
+        return raiz == null;
+    }//method
+
+    @Override
+    public int size() {
+        return cont;
+    }//method
+
+    @Override
+    public boolean contains(T elem) {
+        if (isEmpty() || elem == null)
+            return false;
+        if (raiz.getElement().equals(elem))
+            return true;            
+        return contains(elem, raiz.getDer()) || contains(elem, raiz.getIzq());
+    }//method
+
+    private boolean contains(T elem, NodoBT<T> nodo){
+        if (nodo == null || nodo.element == null)
+            return false;
+        if (nodo.getElement().equals(elem))
+            return true;
+        return contains(elem, nodo.getIzq()) || contains(elem, nodo.getDer());
+
+    }//method
+
+    @Override
+    public <T extends Comparable<T>> T find(T elemento) {
+        return null;
+    }//method   
+
+    @Override
+    public Iterator<T> inOrden() {
+        ArrayList<T> lista = new ArrayList<T>();
+        inOrden(raiz, lista);
+        System.out.println(lista.toString());
+        return lista.iterator();        
+    }//method
+
+    private void inOrden(NodoBT<T> nodo, ArrayList<T> lista){
+        if (nodo==null)
+            return;        
+        inOrden(nodo.getIzq(), lista);
+        lista.add(nodo.getElement());
+        inOrden(nodo.getDer(), lista);
+    }//method
+
+    @Override
+    public Iterator<T> preOrden() {
+        ArrayList<T> lista = new ArrayList<T>();
+        preOrden(raiz, lista);
+        
+        return lista.iterator();        
+    }//method
+
+    private void preOrden(NodoBT<T> nodo, ArrayList<T> lista){
+        if (nodo==null)
+            return;
+        lista.add(nodo.getElement());
+        preOrden(nodo.getIzq(), lista);
+        preOrden(nodo.getDer(), lista);
+    }//method
+
+    @Override
+    public Iterator<T> postOrden() {
+        ArrayList<T> lista = new ArrayList<T>();
+        postOrden(raiz, lista);
+        return lista.iterator();                
+    }//method
+
+    private void postOrden(NodoBT<T> nodo, ArrayList<T> lista){
+        if (nodo==null)
+            return;        
+        postOrden(nodo.getIzq(), lista);
+        postOrden(nodo.getDer(), lista);
+        lista.add(nodo.getElement());
+    }//method
+
+    @Override
+    public int altura() {
+        return altura(raiz);
+    }//method
+
+    private int altura(NodoBT<T> nodo){        
+        if (nodo == null)
+            return 0;
+        int i, d;
+        i = altura(nodo.getIzq());
+        d = altura(nodo.getDer());                
+        if (i > d)
+            return i + 1;
+        else
+            return d + 1;
+    }//method
+
+    @Override
+    public void agrega(T elem) {
+        if (isEmpty()){
+            raiz = new NodoBT(elem);
+            return;
+        }//if
+        agrega(null, raiz, elem);
+    }//method
+
+    private void agrega(NodoBT papa, NodoBT nodo, T elem){
+        if (nodo == null){
+            nodo = new NodoBT(elem);
+            if (papa != null){
+                if (nodo.getElement().compareTo(elem) > 0)
+                    papa.setIzq(nodo);
+                else
+                    papa.setDer(nodo);
+                nodo.setPapa(papa);
+            }//if
+            return;
+        }//if
+        if (nodo.getElement().compareTo(elem) > 0)
+            agrega(nodo, nodo.getIzq(), elem);
+        else
+            agrega(nodo, nodo.getDer(), elem);        
+    }//method
+
+    @Override
+    public  boolean delete(T elem) {
+        // TODO Auto-generated method stub
+        return false;
+    }//method
+
+
+    public static void main(String[] args){
+        BinarySearchTree <Integer> a = new BinarySearchTree();
+        Integer[] datos = {1,2,3,4};
+        for (int i = 0; i < datos.length; i++)
+            a.agrega(datos[i]);
+        Iterator it = a.inOrden();
+        while(it.hasNext())
+        	System.out.println(it.next().toString());
+    }//main
+
+}//class

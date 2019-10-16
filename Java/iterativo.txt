@@ -1,0 +1,194 @@
+package Tareas;
+
+
+
+public class ord {
+    public static<T extends Comparable <T>> void ordenaQuickSort(T [] arr){
+        ordenaQuickSort(arr, 0, arr.length - 1);
+    }//method
+
+    private static <T extends Comparable <T>> void ordenaQuickSort(T [] arr, int in, int fin){    	
+    	if (in >= fin) {
+    		return;
+        }
+        int i = in, piv = (int) (Math.random() * ((fin - in) + 1)) + in, aux;
+        T temp;
+        while (i <= fin){
+            if (i < piv && arr[i].compareTo(arr[piv]) > 0){
+                
+                    temp = arr[i];
+                    arr[i] = arr[piv];
+                    arr[piv] = temp;
+                
+            }//if
+            else
+                if (i > piv && arr[i].compareTo(arr[piv]) < 0){
+                    temp = arr[i];
+                    arr[i] = arr[piv];
+                    arr[piv] = temp;
+                    aux = i;
+                    i = piv;
+                    piv = aux;
+                }//if
+            i++;
+        }//while
+        ordenaQuickSort(arr, 0, piv-1);        
+        
+    }//method
+
+    public static <T extends Comparable <T>> void mergeSort(T [] arr){
+        if (arr.length <= 1)
+        return;
+        DoubleNode curr = new DoubleNode(arr[0]), inicio = curr;
+        
+        for (int i = 1; i < arr.length; i++){//se transfiere el arreglo a una serie de DoubleNodes
+            curr.setNext(new DoubleNode(arr[i]));
+            curr.getNext().setPrevious(curr);
+            curr = curr.getNext();
+        }//for
+        curr = inicio;
+        /*while (curr != null ){
+          System.out.println("webos");
+            mergeSort(curr, curr.getNext(), 1);
+            curr = curr.getNext();
+            if (curr != null)
+                curr = curr.getNext();
+        }//while
+        */
+        DoubleNode n1, n2, temp;
+        int size = 1, c1 = 0, c2 = 0;
+        T t1, t2;
+        while(size < arr.length){
+            n1 = inicio;
+            n2 = n1.getNext();
+
+            while(n1 != null){
+
+                for (int u = 1; u < size; u++)
+                    if (n2 == null)
+                        break;
+                    else
+                        n2 = n2.getNext();
+                while (n2 != null && c1 < size && c2 < size){
+                    t1 = (T)n1.getElement(); t2 = (T)n2.getElement();
+                    if(t1.compareTo(t2) >= 0){
+                        temp = n2.getNext();
+                        n2.getPrevious().setNext(n2.getNext());
+                        if (n2.getNext() != null)
+                            n2.getNext().setPrevious(n2.getPrevious());
+                        if (n1.getPrevious() != null){
+                            n1.getPrevious().setNext(n2);
+                            n2.setPrevious(n1.getPrevious());                    
+                        }//if
+                        n2.setNext(n1);
+                        n1.setPrevious(n2);
+                        c2++;
+                        n2 = temp;
+                    }//if
+                    else{
+                        c1++;
+                        n1 = n1.getNext();
+                    }//else
+                }//while                
+                while (n2 != null && c2 < size){
+                    c2++;
+                    n2 = n2.getNext();
+                }//while
+
+                if (n2 == null)
+                    return;
+                
+                n1 = n2;
+                n2 = n1.getNext();
+                
+            }//while
+            size *= 2;
+        }//while
+
+
+        while (inicio.getPrevious() != null)
+            inicio = inicio.getPrevious();
+        curr = inicio;
+        int i = 0;
+        while (curr != null){
+            arr[i] = (T)curr.getElement();
+            curr = curr.getNext();
+            i++;
+        }//while
+
+    }//method
+
+    private static <T extends Comparable <T>> void mergeSort(DoubleNode in1, DoubleNode in2, int size){
+        if (in2 == null || in1.equals(in2)){
+            //System.out.println("sale");
+            return;
+        }//if
+
+            //System.out.println("entra");
+        DoubleNode curr1 = in1, curr2 = in2, temp, inicio = in1;
+        int c1 = 0, c2 = 0;
+        T aux1, aux2;
+        while(curr1 !=null && curr2!= null && c1 < size && c2 < size){
+
+
+            while (inicio.getPrevious() != null)
+            inicio = inicio.getPrevious();
+        
+        int i = 0;
+        while (inicio != null){
+            System.out.print(inicio.getElement() + ", ");
+            inicio = inicio.getNext();
+            i++;
+        }//while
+        System.out.println();
+
+
+
+            aux1 = (T) curr1.getElement();
+            aux2 = (T) curr2.getElement();
+            System.out.println("a1 "+aux1 +" a2 "+aux2);
+            if (aux1.compareTo(aux2) >= 0){
+                temp = curr2;
+                curr2 = curr2.getNext();                
+                temp.getPrevious().setNext(temp.getNext());
+                if (curr2 != null)               
+                    temp.getPrevious().getNext().setPrevious(temp.getPrevious());
+                if (curr1.getPrevious() != null)
+                    curr1.getPrevious().setNext(temp);
+                temp.setPrevious(curr1.getPrevious());
+                temp.setNext(curr1);
+                curr1.setPrevious(temp);
+                c2++;
+            }//if
+            else{
+                curr1 = curr1.getNext();
+                c1++;
+            }//else
+        }//while
+        if(curr1 == null ||curr2 == null)
+            return;
+
+        mergeSort(in1, curr2.getNext(), size*2);
+    }//method
+
+
+    public static <T> String impArr(T [] arr){
+        StringBuilder res = new StringBuilder();
+
+        for(int i = 0; i < arr.length; i++)
+            res.append(arr[i]).append(", ");
+
+        return res.toString();
+    }//method
+
+    public static void main (String args []){        
+        Integer[] arr = {3,2,6,1};
+        System.out.println("Original");
+        System.out.println(impArr(arr));
+        mergeSort(arr);
+        System.out.println("Ordenado");
+        System.out.println(impArr(arr));
+    }//main
+
+
+}

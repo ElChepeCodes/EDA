@@ -1,0 +1,63 @@
+package Arboles;
+
+public class  NodoBT <T extends Comparable<T>>{
+    T element;
+    NodoBT<T> izq, der, papa;
+    NodoBT(T elem){
+        element = elem;
+        izq = null; der = null; papa = null;
+    }//builder
+
+    public int numDescendientes(){
+        int hijos = 0;
+        if (izq != null)
+            hijos += 1 + izq.numDescendientes();
+        if (der != null)
+            hijos += 1 + der.numDescendientes();
+        return hijos;
+    }//method
+
+    public T getElement(){
+        return element;
+    }//method
+
+    public String toString(){
+        return element.toString() + "\n[" + izq.toString() +"---" + der.toString()+"]";
+    }//method
+
+    public NodoBT getDer(){
+        return der;
+    }//method
+
+    public NodoBT getIzq(){
+        return izq;
+    }//method
+
+    public NodoBT getPapa(){
+        return papa;
+    }//method
+
+    public void setIzq(T elem){
+        izq = new NodoBT(elem);
+    }//method
+
+    public void setDer(T elem){
+        der = new NodoBT(elem);
+    }//method
+
+    public void setPapa(T elem){
+        papa = new NodoBT(elem);
+    }//method
+
+    public void setIzq(NodoBT nodo){
+        izq = nodo;
+    }//method
+
+    public void setDer(NodoBT nodo){
+        der = nodo;
+    }//method
+
+    public void setPapa(NodoBT nodo){
+        papa = nodo;
+    }//method
+}//class

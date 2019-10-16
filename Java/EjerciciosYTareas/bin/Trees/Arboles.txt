@@ -1,0 +1,8 @@
+Arboles
+
+Un grafo G=(V,E) es un conjunto de vertices V={v1,v2,...,vn}
+y de ancho E donde cada arista es una pareja de vertices (vi,vz)
+
+Un arbol es un grafo conexo y aciclico en donde un nodo es designado como raiz (el punto de entrada del arbol)
+
+-Conexo: existe un camno entre cualesquiera dos vertices
