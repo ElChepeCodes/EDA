@@ -186,10 +186,11 @@ public class BinBalancedTree<T extends Comparable<T>>{
         NodoBT n = find(raiz, elem);
         if (n == null)
             return false;
-        //Si la raiz es una hoja
+        //Si es una hoja
         if (n.getDer()==null && n.getIzq()==null){
             if (n.getPapa()==null){
-                n = null;                
+                n = null;  
+                raiz = null;
             }
             else
                 if (n.getElement().compareTo(n.getPapa().getElement())<0){
@@ -219,6 +220,15 @@ public class BinBalancedTree<T extends Comparable<T>>{
                 else{                    
                     n.getPapa().cuelga(n.getDer());
                 }//else
+                int eq = n.equilibrio ,a = n.calculaEquilibrio();
+                while (eq != a && n != null){
+                System.out.println("while delete raro");
+                if (Math.abs(a) == 2)
+                    rota(n);
+                n = n.getPapa();
+                eq = n.equilibrio;
+                a = n.calculaEquilibrio();
+            }//while
             }else
             if (n.getDer()==null){
                 if(n == raiz){
@@ -235,9 +245,19 @@ public class BinBalancedTree<T extends Comparable<T>>{
                 if(suc == n.getDer())
                     n.setDer(suc.getDer());
                 else
-                    suc.getPapa().setIzq(suc.getDer());
+                    suc.getPapa().setIzq(temp);
+                if (Math.abs(suc.calculaEquilibrio()) == 2)
+                    rota(suc);
+                if (suc.getDer() != null)
+                if (Math.abs(suc.getDer().calculaEquilibrio()) == 2)
+                    rota(suc.getDer());
+                if (suc.getIzq() != null)
+                if (Math.abs(suc.getIzq().calculaEquilibrio()) == 2)
+                    rota(suc.getIzq());
+                
             }        
             cont--;
+            balanceaTodo();
             return true;
     }
     public <T extends Comparable<T>> NodoBT<T> find(T ele){
@@ -247,6 +267,33 @@ public class BinBalancedTree<T extends Comparable<T>>{
             return null;
     }//method
     
+    private void balanceaTodo(){
+        NodoBT<T> p = raiz,i,d;
+        if (p != null){
+            i = p.getIzq();
+            d = p.getDer();
+        }//if
+        else
+            return;
+        if (Math.abs(p.calculaEquilibrio()) == 2)
+            rota(p);
+        balanceaTodo(i);
+        balanceaTodo(d);
+    }//method
+    
+    private void balanceaTodo(NodoBT<T> p){
+        NodoBT<T>i,d;
+        if (p != null){
+            i = p.getIzq();
+            d = p.getDer();
+        }//if
+        else
+            return;
+        if (Math.abs(p.calculaEquilibrio()) == 2)
+            rota(p);
+        balanceaTodo(i);
+        balanceaTodo(d);
+    }//method
     
     private <T extends Comparable<T>> NodoBT<T> find(NodoBT nodo, T elem){
         if (nodo == null)
@@ -453,20 +500,26 @@ public class BinBalancedTree<T extends Comparable<T>>{
     public static void main (String args[]){
         BinBalancedTree<Integer> t = new BinBalancedTree();
         Iterator<Integer> it;
-        t.agrega(7);        
         t.agrega(8);
-        t.agrega(1);
-        t.agrega(0);
+        t.agrega(22);
+        t.agrega(104);
         t.agrega(2);
-        t.agrega(3);
-        t.agrega(-1);
-        t.agrega(10);
+        t.agrega(5);
+        t.agrega(52);
+
         it = t.preOrden();
         StringBuilder s = new StringBuilder();
         while (it.hasNext())
             s.append(it.next()).append(", ");
         System.out.println(s.toString());
         System.out.println(t.raiz.equilibrio);
+        System.out.println("------------------------------original---------------------");
+        t.print2D(t.raiz);        
+        t.delete(104);
+        t.delete(52);
+        //t.delete(400);
+        //t.delete(380);
+        System.out.println("---------------------------después de borrar---------------------");
         t.print2D(t.raiz);
     }//main
 }//class
