@@ -22,19 +22,18 @@ public class Trie<T> {
         
     }//method
     
-    public boolean busca(String llave){
+    public int busca(String llave){
         if (isEmpty())
-            return false;
+            return 0;
         return busca(llave, raiz.getSig());
     }//method
     
-    private boolean busca(String llave, NodoTrie actual){
+    private int busca(String llave, NodoTrie actual){
         if (actual == null){
-            return false;
+            return 0;
         }//if
-        if (llave == null || llave.equals("")){
-            System.out.println(actual.cont);
-            return actual.cont >0;
+        if (llave == null || llave.equals("")){            
+            return actual.cont;
         }//if
         else{
             return busca(llave.substring(1), actual.getNodo(llave.charAt(0)));
@@ -52,10 +51,10 @@ public class Trie<T> {
     public boolean delete(String llave){
         if (isEmpty())
             return false;
-        return delete(llave, raiz.getSig());
+        return delete(llave, raiz.getSig(), llave);
     }//method
     
-    private boolean delete(String llave, NodoTrie actual){
+    private boolean delete(String llave, NodoTrie actual, String llaveCompleta){
         //Si no hay mas apuntadores desde sus hijos
         if (llave.length() == 1){
             //si no esta registrada la palabra
@@ -66,8 +65,8 @@ public class Trie<T> {
             actual.getNodo(llave.charAt(0)).cont --;                
             else{
                 //se hace nulo el apuntador en el char de la llave que ya esta vacio
-                if (actual.getNodo(llave.charAt(0)).isEmpty()){
-                    eliminaInnecesarios(actual.getNodo(llave.charAt(0)));
+                if (actual.getNodo(llave.charAt(0)).isEmpty()){                    
+                    eliminaInnecesarios(actual.getNodo(llave.charAt(0)), llaveCompleta);
                 }//if
                 else{
                     actual.getNodo(llave.charAt(0)).cont --;
@@ -79,12 +78,18 @@ public class Trie<T> {
         else{
             if (actual.getNodo(llave.charAt(0)) == null)
                 return false;
-            return delete(llave.substring(1), actual.getNodo(llave.charAt(0)));
+            return delete(llave.substring(1), actual.getNodo(llave.charAt(0)), llaveCompleta);
         }//else
     }//method
     
-    public void eliminaInnecesarios(NodoTrie n){
-        
+    public void eliminaInnecesarios(NodoTrie n, String llave){
+        while(n.getPapa() != null && llave.length() > 1 && n.emptyExcept(llave.charAt(llave.length()-1))){
+            n = n.getPapa();
+            n.hijos[n.pos(llave.charAt(llave.length()-1))] = null;
+            llave = llave.substring(0,llave.length()-1);
+        }//while
+        if (n.getPapa() == null && n.emptyExcept(llave.charAt(0)))
+            raiz.setSig(null);
     }//method
     
 
@@ -98,6 +103,22 @@ public class Trie<T> {
     
     public NodoTrie getRaiz(){
         return raiz.getSig();
+    }//method
+    
+    public String imprime(){
+        StringBuilder res = new StringBuilder();
+        imprime(raiz.getSig(), res, "");
+        return res.toString();
+    }//method
+    
+    private void imprime(NodoTrie<T> n, StringBuilder res, String actual){
+        int i;
+        for (i = 0; i < n.cont; i++){
+            res.append(actual).append("\n");
+        }//for
+        for (i = 0; i < simbolos.length; i++){
+            
+        }//for
     }//method
     
     private class sent{
@@ -129,8 +150,14 @@ public class Trie<T> {
         System.out.println("Busca holograma");
         System.out.println(t.busca("holograma"));
         t.delete("hola");
+        t.delete("holograma");
+        t.delete("hola");
+        t.delete("hola");
+        System.out.println("Se borra hola y holograma");
         System.out.println("Busca hola");
         System.out.println(t.busca("hola"));
+        System.out.println("Busca holograma");
+        System.out.println(t.busca("holograma"));
     }//main
     
 }//class

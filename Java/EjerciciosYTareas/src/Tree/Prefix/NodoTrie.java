@@ -36,6 +36,10 @@ public class NodoTrie<T> {
         papa = null;
     }//builder
     
+    public NodoTrie<T> getPapa(){
+        return papa;
+    }//method
+    
     public NodoTrie(String key, NodoTrie pa){
         hijos = new NodoTrie[keys.length];
         if (key != null)           
@@ -52,20 +56,23 @@ public class NodoTrie<T> {
             if (hijos[pos(key.charAt(0))] == null){
                 hijos[pos(key.charAt(0))] = new NodoTrie();
                 hijos[pos(key.charAt(0))].cont++;
+                hijos[pos(key.charAt(0))].papa = this;
             }//if
             else
                 hijos[pos(key.charAt(0))].cont++;
         }//if
         else{
-            if (hijos[pos(key.charAt(0))] == null)
-                hijos[pos(key.charAt(0))] = new NodoTrie(key.substring(1));
+            if (hijos[pos(key.charAt(0))] == null){
+                hijos[pos(key.charAt(0))] = new NodoTrie(key.substring(1));            
+                hijos[pos(key.charAt(0))].papa = this;
+            }
             else{
                 hijos[pos(key.charAt(0))].add(key.substring(1));
             }//else
         }//else
     }//method
     
-    private int pos(char c){
+    public int pos(char c){
         int i = 0;
         while (i < keys.length && keys[i] != c)
             i++;
