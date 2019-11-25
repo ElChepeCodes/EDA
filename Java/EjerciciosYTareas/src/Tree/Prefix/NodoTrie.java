@@ -32,7 +32,6 @@ public class NodoTrie<T> {
         hijos = new NodoTrie[keys.length];
         if (key != null)           
             add(key);
-        cont++;
         papa = null;
     }//builder
     

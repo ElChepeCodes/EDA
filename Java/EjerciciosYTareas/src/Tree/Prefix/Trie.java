@@ -4,6 +4,9 @@
  */
 package Tree.Prefix;
 
+import java.io.File;
+import java.util.Scanner;
+
 /**
  *
  * @author jlgut
@@ -19,6 +22,44 @@ public class Trie<T> {
     }//builder
     
     public void sort(char[] ar){
+         int [] arr = {0};
+        ordenaMergeSort(ar, 0, ar.length - 1, arr);
+               
+    }//method
+    
+    //Metodo que ordena el arreglo con el merge sort
+    private static void ordenaMergeSort(char [] datos, int min, int max, int[] sum){
+        char [] temp;
+        int indice, izq, der;
+        if (min >= max - 1)
+            return;
+        int tam = max - min + 1, mitad = (max + min)/2;
+        temp = new char[tam];
+        ordenaMergeSort(datos, min, mitad, sum);
+        ordenaMergeSort(datos, mitad + 1, max, sum);
+
+        izq = min; der = mitad + 1;
+        for(int i = 0; i < tam; i++){
+            sum[0]++;
+            if(izq <= mitad && der <= max){
+                if(datos[izq] < datos[der])
+                    temp[i] = datos[izq++];
+                else
+                    temp[i] = datos[der++];
+            }//if
+            else{
+                if(izq <= mitad)
+                    temp[i] = datos[izq++];
+                else   
+                    temp[i] = datos[der++];
+            }//else
+        }//for
+
+
+        for(int i = 0; i < temp.length; i++){
+            sum[0]++;
+            datos[min + i] = temp[i];
+        }//for
         
     }//method
     
@@ -117,8 +158,15 @@ public class Trie<T> {
             res.append(actual).append("\n");
         }//for
         for (i = 0; i < simbolos.length; i++){
-            
+            if (n.hijos[i] != null)
+                imprime(n.hijos[i], res, actual + simbolos[i]);
         }//for
+    }//method
+    
+    public String[] toStringArray(){
+        String s = imprime();
+        String [] arr = s.split("\n");
+        return arr;
     }//method
     
     private class sent{
@@ -141,23 +189,7 @@ public class Trie<T> {
     public static void main (String args[]){
         char keys [] = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
         Trie<Integer> t = new Trie(keys);
-        t.add("hola");
-        t.add("hola");
-        t.add("hola");
-        t.add("holograma");
-        System.out.println("Busca hola");
-        System.out.println(t.busca("hola"));
-        System.out.println("Busca holograma");
-        System.out.println(t.busca("holograma"));
-        t.delete("hola");
-        t.delete("holograma");
-        t.delete("hola");
-        t.delete("hola");
-        System.out.println("Se borra hola y holograma");
-        System.out.println("Busca hola");
-        System.out.println(t.busca("hola"));
-        System.out.println("Busca holograma");
-        System.out.println(t.busca("holograma"));
+        System.out.println(t.imprime());
     }//main
     
 }//class
