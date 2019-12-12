@@ -23,4 +23,20 @@ public class HashNode <T> {
         elem = element;
         sig = null;
     }//builder
+    
+    public HashNode<T> getNext(){
+        return sig;
+    }//method
+    
+    public T getElem(){
+        return elem;
+    }//method
+    
+    public void setNext(HashNode<T> n){
+        sig = n;
+    }//method
+    
+    public boolean hasNext(){
+        return sig != null;
+    }//method
 }//class

@@ -15,11 +15,14 @@ public class MinHeap <T extends Comparable <T>> implements HeapADT{
     
     public MinHeap(){
        // heap = (NodoHeap<T>[])(new Object[10]);
-                heap = new NodoHeap[10];
-
+        heap = new NodoHeap[10];
         cont = 0;
     }//builder
     
+    public MinHeap(int n){
+        heap = new NodoHeap[n];
+        cont = 0;
+    }//builder
     
     @Override
     public void add(Comparable elem) {
@@ -43,11 +46,7 @@ public class MinHeap <T extends Comparable <T>> implements HeapADT{
                     pos = papa;
                     papa /= 2;
             }//while
-            
         }//else
-            
-        
-        return;
     }//method
     
     private void expand(){
